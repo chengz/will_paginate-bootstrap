@@ -6,7 +6,7 @@ module BootstrapPagination
     ELLIPSIS = '&hellip;'
 
     def container_attributes
-      super.except(:link_options)
+      super.except(:anchor_options)
     end
 
     def to_html
@@ -25,10 +25,13 @@ module BootstrapPagination
     protected
 
     def page_number(page)
+      anchor_options = @options[:anchor_options]
+      anchor_options ||= {}
       if page == current_page
-        tag('li', link(page, page), :class => 'active')
+        tag('li', link(page, page, anchor_options), :class => 'active')
       else
-        tag('li', link(page, page, :rel => rel_value(page)))
+        anchor_options.merge!(:rel => rel_value(page))
+        tag('li', link(page, page, anchor_options))
       end
     end
 
@@ -47,12 +50,12 @@ module BootstrapPagination
     end
 
     def previous_or_next_page(page, text, classname)
-      link_options = @options[:link_options]
-      link_options ||= {}
+      anchor_options = @options[:anchor_options]
+      anchor_options ||= {}
       if page
-        tag('li', link(text, page, link_options), :class => classname)
+        tag('li', link(text, page, anchor_options), :class => classname)
       else
-        tag('li', link(text, '#', link_options), :class => "%s disabled" % classname)
+        tag('li', link(text, '#', anchor_options), :class => "%s disabled" % classname)
       end
     end
   end

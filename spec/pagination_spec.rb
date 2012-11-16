@@ -26,7 +26,7 @@ describe "Bootstrap Renderer" do
     page = (collection_size / 2.0).to_i
 
     @collection = 1.upto(collection_size).to_a
-    @output = will_paginate(@collection.paginate(:page => page, :per_page => 1), :renderer => MockRenderer)
+    @output = will_paginate(@collection.paginate(:page => page, :per_page => 1), :renderer => MockRenderer, :anchor_options => { :class => "page" })
     @html = Nokogiri::HTML.fragment(@output)
   end
 
@@ -68,5 +68,9 @@ describe "Bootstrap Renderer" do
 
   it "has anchors within each list item" do
     @html.css('ul li').each { |li| li.at_css('a').wont_be_nil }
+  end
+
+  it "has page class on anchor within of each list item" do
+    @html.css('ul li[class!=disabled]').each { |li| li.at_css('a.page').wont_be_nil }
   end
 end
