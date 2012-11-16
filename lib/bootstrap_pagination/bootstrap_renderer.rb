@@ -5,6 +5,10 @@ module BootstrapPagination
   module BootstrapRenderer
     ELLIPSIS = '&hellip;'
 
+    def container_attributes
+      super.except(:link_options)
+    end
+
     def to_html
       list_items = pagination.map do |item|
         case item
@@ -43,10 +47,12 @@ module BootstrapPagination
     end
 
     def previous_or_next_page(page, text, classname)
+      link_options = @options[:link_options]
+      link_options ||= {}
       if page
-        tag('li', link(text, page), :class => classname)
+        tag('li', link(text, page, link_options), :class => classname)
       else
-        tag('li', link(text, '#'), :class => "%s disabled" % classname)
+        tag('li', link(text, '#', link_options), :class => "%s disabled" % classname)
       end
     end
   end
